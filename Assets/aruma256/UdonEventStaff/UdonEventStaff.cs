@@ -11,13 +11,11 @@ public class UdonEventStaff : UdonSharpBehaviour
 {
     [Header("スタッフのみ ON にするオブジェクト")]
     [SerializeField] private GameObject[] staffOnlyOnObjects;
-    [Header("スタッフのみ ON にするコライダー/トリガー", order = 0)]
-    [Header("(スタッフのみPickup可能にするなど)", order = 1)]
+    [Header("スタッフのみ ON にするコライダー/トリガー（スタッフのみ持てる など）")]
     [SerializeField] private Collider[] staffOnlyOnColliders;
     [Header("スタッフのみ OFF にするオブジェクト")]
     [SerializeField] private GameObject[] staffOnlyOffObjects;
-    [Header("スタッフのみ OFF にするコライダー/トリガー", order = 0)]
-    [Header("(スタッフのみ入れるようにするなど)", order = 1)]
+    [Header("スタッフのみ OFF にするコライダー/トリガー（スタッフのみ入れる など）")]
     [SerializeField] private Collider[] staffOnlyOffColliders;
     //
     [Header("スタッフの名前リスト(Unityで設定)")]
