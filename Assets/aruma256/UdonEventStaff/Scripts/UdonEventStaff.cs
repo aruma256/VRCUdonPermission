@@ -6,6 +6,7 @@ using VRC.SDK3.StringLoading;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 
+[DefaultExecutionOrder(-1000)]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class UdonEventStaff : UdonSharpBehaviour
 {
