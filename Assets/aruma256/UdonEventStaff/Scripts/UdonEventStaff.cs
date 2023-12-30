@@ -142,4 +142,15 @@ public class UdonEventStaff : UdonSharpBehaviour
     {
         Debug.Log("[UdonEventStaff] " + message);
     }
+
+    public bool GetAmIStaff()
+    {
+        return amIStaff;
+    }
+
+    public void BecomeStaff()
+    {
+        amIStaff = true;
+        Apply();
+    }
 }
