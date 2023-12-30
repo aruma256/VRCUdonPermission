@@ -51,16 +51,16 @@ public class UdonEventStaff : UdonSharpBehaviour
         if (succeeded) {
             InitWithStaffList(loadedStaffList);
         } else {
-            Debug.Log("Unity内のリストを使用します。");
+            DebugLog("Unity内のリストを使用します。");
             InitWithStaffList(staffList);
         }
     }
 
     public override void OnStringLoadError(IVRCStringDownload result)
     {
-        Debug.Log("指定のURLへアクセスできませんでした。");
-        Debug.Log("Unity内のリストを使用します。");
-        Debug.Log(result.Error);
+        DebugLog("指定のURLへアクセスできませんでした。");
+        DebugLog("Unity内のリストを使用します。");
+        DebugLog(result.Error);
         InitWithStaffList(staffList);
     }
 
@@ -93,12 +93,12 @@ public class UdonEventStaff : UdonSharpBehaviour
     {
         bool succeeded = VRCJson.TryDeserializeFromJson(json, out DataToken token);
         if (!succeeded) {
-            Debug.Log("JSONとして読み込めませんでした。");
+            DebugLog("JSONとして読み込めませんでした。");
             return null;
         }
         if (token.TokenType != TokenType.DataList) {
-            Debug.Log("読み込みに失敗しました。リスト形式ではありません。");
-            Debug.Log("[\"名前1\", \"名前2\", ...] のような形式である必要があります。");
+            DebugLog("読み込みに失敗しました。リスト形式ではありません。");
+            DebugLog("[\"名前1\", \"名前2\", ...] のような形式である必要があります。");
             return null;
         }
         DataList dataList = token.DataList;
@@ -106,9 +106,14 @@ public class UdonEventStaff : UdonSharpBehaviour
         for (int i = 0; i < dataList.Count; i++)
         {
             staffList[i] = dataList[i].String;
-            Debug.Log(staffList[i]);
+            DebugLog(staffList[i]);
         }
-        Debug.Log("読み込みに成功しました (" + dataList.Count + "件)");
+        DebugLog("読み込みに成功しました (" + dataList.Count + "件)");
         return staffList;
+    }
+
+    private static void DebugLog(string message)
+    {
+        Debug.Log("[UdonEventStaff] " + message);
     }
 }
