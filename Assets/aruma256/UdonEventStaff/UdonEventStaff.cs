@@ -81,10 +81,22 @@ public class UdonEventStaff : UdonSharpBehaviour
 
     private void Apply()
     {
-        foreach (GameObject obj in staffOnlyOnObjects) obj.SetActive(amIStaff);
-        foreach (Collider collider in staffOnlyOnColliders) collider.enabled = amIStaff;
-        foreach (GameObject obj in staffOnlyOffObjects) obj.SetActive(!amIStaff);
-        foreach (Collider collider in staffOnlyOffColliders) collider.enabled = !amIStaff;
+        foreach (GameObject obj in staffOnlyOnObjects)
+        {
+            if (obj != null) obj.SetActive(amIStaff);
+        }
+        foreach (Collider collider in staffOnlyOnColliders)
+        {
+            if (collider != null) collider.enabled = amIStaff;
+        }
+        foreach (GameObject obj in staffOnlyOffObjects)
+        {
+            if (obj != null) obj.SetActive(!amIStaff);
+        }
+        foreach (Collider collider in staffOnlyOffColliders)
+        {
+            if (collider != null) collider.enabled = !amIStaff;
+        }
     }
 
     // Utils
