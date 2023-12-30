@@ -9,14 +9,18 @@ using VRC.Udon.Common.Interfaces;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class UdonEventStaff : UdonSharpBehaviour
 {
+    [Header("スタッフのみ ON にするレンダラー（スタッフのみ見えるなど）")]
+    [SerializeField] private Renderer[] staffOnlyOnRenderers;
+    [Header("スタッフのみ ON にするコライダー/トリガー（スタッフのみ乗れる/持てる・使えるなど）")]
+    [SerializeField] private Collider[] staffOnlyOnColliders;
     [Header("スタッフのみ ON にするオブジェクト")]
     [SerializeField] private GameObject[] staffOnlyOnObjects;
-    [Header("スタッフのみ ON にするコライダー/トリガー（スタッフのみ持てる など）")]
-    [SerializeField] private Collider[] staffOnlyOnColliders;
+    [Header("スタッフのみ OFF にするレンダラー（非スタッフ向けの表示など）")]
+    [SerializeField] private Renderer[] staffOnlyOffRenderers;
+    [Header("スタッフのみ OFF にするコライダー/トリガー（非スタッフの立入禁止など）")]
+    [SerializeField] private Collider[] staffOnlyOffColliders;
     [Header("スタッフのみ OFF にするオブジェクト")]
     [SerializeField] private GameObject[] staffOnlyOffObjects;
-    [Header("スタッフのみ OFF にするコライダー/トリガー（スタッフのみ入れる など）")]
-    [SerializeField] private Collider[] staffOnlyOffColliders;
     //
     [Header("スタッフの名前リスト(Unityで設定)")]
     [SerializeField] private string[] staffList;
@@ -81,21 +85,31 @@ public class UdonEventStaff : UdonSharpBehaviour
 
     private void Apply()
     {
-        foreach (GameObject obj in staffOnlyOnObjects)
+        // ON
+        foreach (Renderer renderer in staffOnlyOnRenderers)
         {
-            if (obj != null) obj.SetActive(amIStaff);
+            if (renderer != null) renderer.enabled = amIStaff;
         }
         foreach (Collider collider in staffOnlyOnColliders)
         {
             if (collider != null) collider.enabled = amIStaff;
         }
-        foreach (GameObject obj in staffOnlyOffObjects)
+        foreach (GameObject obj in staffOnlyOnObjects)
         {
-            if (obj != null) obj.SetActive(!amIStaff);
+            if (obj != null) obj.SetActive(amIStaff);
+        }
+        // OFF
+        foreach (Renderer renderer in staffOnlyOffRenderers)
+        {
+            if (renderer != null) renderer.enabled = !amIStaff;
         }
         foreach (Collider collider in staffOnlyOffColliders)
         {
             if (collider != null) collider.enabled = !amIStaff;
+        }
+        foreach (GameObject obj in staffOnlyOffObjects)
+        {
+            if (obj != null) obj.SetActive(!amIStaff);
         }
     }
 
