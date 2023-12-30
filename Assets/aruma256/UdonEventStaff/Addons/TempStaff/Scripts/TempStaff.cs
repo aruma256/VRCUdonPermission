@@ -1,5 +1,4 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC.SDKBase;
@@ -7,7 +6,7 @@ using VRC.SDK3.Data;
 using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-public class AddTempStaff : UdonSharpBehaviour
+public class TempStaff : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
     [SerializeField] Text miniText;
