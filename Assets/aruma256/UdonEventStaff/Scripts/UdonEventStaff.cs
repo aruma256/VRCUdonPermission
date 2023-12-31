@@ -77,7 +77,6 @@ public class UdonEventStaff : UdonSharpBehaviour
 
     private void UpdateStaffFlag(string[] staffs)
     {
-        amIStaff = false;
         foreach (string staff in staffs)
         {
             if (Networking.LocalPlayer.displayName == staff) amIStaff = true;
