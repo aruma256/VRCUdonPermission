@@ -46,7 +46,7 @@ public class TempStaff : UdonSharpBehaviour
             return;
         }
         if (PlayerExistsInTempStaffList(name)) {
-            miniText.text = name + " は既にスタッフです。";
+            miniText.text = name + " は追加済みです。";
             return;
         }
         miniText.text = name + " をスタッフに追加します。";
