@@ -143,7 +143,7 @@ public class UdonEventStaff : UdonSharpBehaviour
         Debug.Log("[UdonEventStaff] " + message);
     }
 
-    public bool GetAmIStaff()
+    public bool AmIStaff()
     {
         return amIStaff;
     }
