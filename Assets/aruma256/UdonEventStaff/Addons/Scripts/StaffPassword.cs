@@ -8,14 +8,14 @@ using VRC.Udon;
 public class StaffPassword : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
-    [SerializeField] Text miniText;
+    [SerializeField] Text statusText;
     [SerializeField] InputField inputField;
     [SerializeField] string password;
 
     void Start()
     {
         if (udonEventStaff == null) {
-            miniText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
+            statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
         }
     }
 
@@ -23,18 +23,18 @@ public class StaffPassword : UdonSharpBehaviour
     {
         if (udonEventStaff == null) return;
         if (udonEventStaff.AmIStaff()) {
-            miniText.text = "すでにスタッフです。";
+            statusText.text = "すでにスタッフです。";
             inputField.gameObject.SetActive(false);
             return;
         }
-        miniText.text = "";
+        statusText.text = "";
         string userInput = inputField.text;
         if (userInput == password) {
             udonEventStaff.BecomeStaff();
-            miniText.text = "スタッフになりました。";
+            statusText.text = "スタッフになりました。";
             inputField.gameObject.SetActive(false);
         } else {
-            miniText.text = "<color=red>パスワードが違います。5秒後にリトライしてください。</color>";
+            statusText.text = "<color=red>パスワードが違います。5秒後にリトライしてください。</color>";
             inputField.gameObject.SetActive(false);
             SendCustomEventDelayedSeconds(nameof(ShowInputFieldAgain), 5);
         }
@@ -44,6 +44,6 @@ public class StaffPassword : UdonSharpBehaviour
     public void ShowInputFieldAgain()
     {
         inputField.gameObject.SetActive(true);
-        miniText.text = "";
+        statusText.text = "";
     }
 }

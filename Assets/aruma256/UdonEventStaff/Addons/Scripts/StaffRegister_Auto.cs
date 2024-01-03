@@ -8,13 +8,13 @@ using VRC.Udon;
 public class StaffRegister_Auto : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
-    [SerializeField] Text miniText;
+    [SerializeField] Text statusText;
     [SerializeField] Button button;
 
     void Start()
     {
         if (udonEventStaff == null) {
-            miniText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
+            statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
         }
     }
 
@@ -22,13 +22,13 @@ public class StaffRegister_Auto : UdonSharpBehaviour
     {
         if (udonEventStaff == null) return;
         if (udonEventStaff.AmIStaff()) {
-            miniText.text = "すでにスタッフです。";
+            statusText.text = "すでにスタッフです。";
             button.interactable = false;
             return;
         }
-        miniText.text = "";
+        statusText.text = "";
         udonEventStaff.BecomeStaff();
-        miniText.text = "スタッフになりました。";
+        statusText.text = "スタッフになりました。";
         button.interactable = false;
     }
 }
