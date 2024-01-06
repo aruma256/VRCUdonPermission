@@ -7,27 +7,27 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GrantPermissionUI : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
     [SerializeField] Text statusText;
     [SerializeField] Button button;
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
         }
     }
 
     public void OnClick()
     {
-        if (udonEventStaff == null) return;
-        if (udonEventStaff.AmIStaff()) {
+        if (udonPermission == null) return;
+        if (udonPermission.AmIStaff()) {
             statusText.text = "すでにスタッフです。";
             button.interactable = false;
             return;
         }
         statusText.text = "";
-        udonEventStaff.BecomeStaff();
+        udonPermission.BecomeStaff();
         statusText.text = "スタッフになりました。";
         button.interactable = false;
     }

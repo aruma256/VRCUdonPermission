@@ -7,22 +7,22 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class PasswordUI : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
     [SerializeField] Text statusText;
     [SerializeField] InputField inputField;
     [SerializeField] string password;
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
         }
     }
 
     public void OnInput()
     {
-        if (udonEventStaff == null) return;
-        if (udonEventStaff.AmIStaff()) {
+        if (udonPermission == null) return;
+        if (udonPermission.AmIStaff()) {
             statusText.text = "すでにスタッフです。";
             inputField.gameObject.SetActive(false);
             return;
@@ -30,7 +30,7 @@ public class PasswordUI : UdonSharpBehaviour
         statusText.text = "";
         string userInput = inputField.text;
         if (userInput == password) {
-            udonEventStaff.BecomeStaff();
+            udonPermission.BecomeStaff();
             statusText.text = "スタッフになりました。";
             inputField.gameObject.SetActive(false);
         } else {

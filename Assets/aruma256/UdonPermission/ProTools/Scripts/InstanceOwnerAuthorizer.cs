@@ -6,7 +6,7 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class InstanceOwnerAuthorizer : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
 
     [UdonSynced(UdonSyncMode.None), FieldChangeCallback(nameof(instanceOwnerName))] private string _instanceOwnerName = "";
     private string instanceOwnerName
@@ -21,14 +21,14 @@ public class InstanceOwnerAuthorizer : UdonSharpBehaviour
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             Debug.Log("[StaffRegister_Manual] UdonEventStaff がリンクされていません。");
         }
     }
 
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
-        if (udonEventStaff == null) return;
+        if (udonPermission == null) return;
         if (!player.isLocal) return;
         if (player.playerId != 1) return;
         //
@@ -39,9 +39,9 @@ public class InstanceOwnerAuthorizer : UdonSharpBehaviour
 
     private void OnInstanceOwnerNameSet()
     {
-        if (udonEventStaff == null) return;
+        if (udonPermission == null) return;
         if (instanceOwnerName != Networking.LocalPlayer.displayName) return;
-        udonEventStaff.BecomeStaff();
+        udonPermission.BecomeStaff();
     }
 
     // Utility Functions

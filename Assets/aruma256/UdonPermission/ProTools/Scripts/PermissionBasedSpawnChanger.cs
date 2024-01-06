@@ -6,11 +6,11 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class PermissionBasedSpawnChanger : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             Debug.Log("ワールドエラー: UdonEventStaff がリンクされていません。");
         }
     }
@@ -27,9 +27,9 @@ public class PermissionBasedSpawnChanger : UdonSharpBehaviour
 
     private void OnPlayerSpawn(VRCPlayerApi player)
     {
-        if (udonEventStaff == null) return;
+        if (udonPermission == null) return;
         if (!player.isLocal) return;
-        if (!udonEventStaff.AmIStaff()) return;
+        if (!udonPermission.AmIStaff()) return;
         player.TeleportTo(
             transform.position,
             transform.rotation,

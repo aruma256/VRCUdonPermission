@@ -7,7 +7,7 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class PermissionRequestUI : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
     [SerializeField] Text statusText;
     [SerializeField] Button requestButton;
     [SerializeField] Button rejectButton;
@@ -38,16 +38,16 @@ public class PermissionRequestUI : UdonSharpBehaviour
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             Debug.Log("[StaffRegister_Manual] UdonEventStaff がリンクされていません。");
         }
     }
 
     public void OnRequestButtonClicked()
     {
-        if (udonEventStaff == null) return;
+        if (udonPermission == null) return;
         if (requestingPlayerId != UNSET) return;
-        if (udonEventStaff.AmIStaff()) {
+        if (udonPermission.AmIStaff()) {
             requestButton.interactable = false;
             return;
         }
@@ -59,8 +59,8 @@ public class PermissionRequestUI : UdonSharpBehaviour
 
     public void OnRejectButtonClicked()
     {
-        if (udonEventStaff == null) return;
-        if (!udonEventStaff.AmIStaff()) return;
+        if (udonPermission == null) return;
+        if (!udonPermission.AmIStaff()) return;
         //
         BecomeOwner();
         requestingPlayerId = UNSET;
@@ -69,8 +69,8 @@ public class PermissionRequestUI : UdonSharpBehaviour
 
     public void OnAcceptButtonClicked()
     {
-        if (udonEventStaff == null) return;
-        if (!udonEventStaff.AmIStaff()) return;
+        if (udonPermission == null) return;
+        if (!udonPermission.AmIStaff()) return;
         //
         BecomeOwner();
         acceptedPlayerId = requestingPlayerId;
@@ -95,14 +95,14 @@ public class PermissionRequestUI : UdonSharpBehaviour
     private void OnAcceptedPlayerIdChanged()
     {
         if (acceptedPlayerId == Networking.LocalPlayer.playerId) {
-            udonEventStaff.BecomeStaff();
+            udonPermission.BecomeStaff();
         }
     }
 
     private void UpdateUIAsIdleMode()
     {
         statusText.text = "";
-        requestButton.interactable = udonEventStaff != null && !udonEventStaff.AmIStaff();
+        requestButton.interactable = udonPermission != null && !udonPermission.AmIStaff();
         acceptButton.interactable = false;
         rejectButton.interactable = false;
     }

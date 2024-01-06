@@ -6,14 +6,14 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class RestrictedTeleporter : UdonSharpBehaviour
 {
-    [SerializeField] UdonEventStaff udonEventStaff;
+    [SerializeField] UdonPermission udonPermission;
     [SerializeField] Transform teleportTarget;
     [Header("非スタッフも使えるようにする（単なるテレポートスイッチにする）")]
     [SerializeField] bool allowNonStaff = false;
 
     void Start()
     {
-        if (udonEventStaff == null) {
+        if (udonPermission == null) {
             Debug.Log("[StaffTeleport] UdonEventStaff がリンクされていません。");
             return;
         }
@@ -25,10 +25,10 @@ public class RestrictedTeleporter : UdonSharpBehaviour
 
     public override void Interact()
     {
-        if (udonEventStaff == null) return;
+        if (udonPermission == null) return;
         if (teleportTarget == null) return;
         //
-        if (allowNonStaff || udonEventStaff.AmIStaff()) {
+        if (allowNonStaff || udonPermission.AmIStaff()) {
             Networking.LocalPlayer.TeleportTo(
                 teleportTarget.position,
                 teleportTarget.rotation,
