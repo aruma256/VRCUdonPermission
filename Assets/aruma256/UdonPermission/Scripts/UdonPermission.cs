@@ -10,40 +10,40 @@ using VRC.Udon.Common.Interfaces;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class UdonPermission : UdonSharpBehaviour
 {
-    [Header("スタッフのみ ON にするレンダラー（スタッフのみ見えるなど）")]
-    [SerializeField] private Renderer[] staffOnlyOnRenderers;
-    [Header("スタッフのみ ON にするコライダー/トリガー（スタッフのみ乗れる/持てる・使えるなど）")]
-    [SerializeField] private Collider[] staffOnlyOnColliders;
-    [Header("スタッフのみ ON にするオブジェクト")]
-    [SerializeField] private GameObject[] staffOnlyOnObjects;
-    [Header("スタッフのみ OFF にするレンダラー（非スタッフ向けの表示など）")]
-    [SerializeField] private Renderer[] staffOnlyOffRenderers;
-    [Header("スタッフのみ OFF にするコライダー/トリガー（非スタッフの立入禁止など）")]
-    [SerializeField] private Collider[] staffOnlyOffColliders;
-    [Header("スタッフのみ OFF にするオブジェクト")]
-    [SerializeField] private GameObject[] staffOnlyOffObjects;
+    [Header("権限持ちのみ ON にするレンダラー（スタッフのみ見えるなど）")]
+    [SerializeField] private Renderer[] restrictedRenderers;
+    [Header("権限持ちのみ ON にするコライダー/トリガー（スタッフのみ乗れる/持てる・使えるなど）")]
+    [SerializeField] private Collider[] restrictedColliders;
+    [Header("権限持ちのみ ON にするオブジェクト")]
+    [SerializeField] private GameObject[] restrictedObjects;
+    [Header("権限持ちのみ OFF にするレンダラー（非スタッフ向けの表示など）")]
+    [SerializeField] private Renderer[] invertedRestrictedRenderers;
+    [Header("権限持ちのみ OFF にするコライダー/トリガー（非スタッフの立入禁止など）")]
+    [SerializeField] private Collider[] invertedRestrictedColliders;
+    [Header("権限持ちのみ OFF にするオブジェクト")]
+    [SerializeField] private GameObject[] invertedRestrictedObjects;
     //
-    [Header("スタッフの名前リスト(Unityで設定)")]
-    [SerializeField] private string[] staffList;
+    [Header("権限を与える対象アカウントの名前リスト")]
+    [SerializeField] private string[] targetAccountNames;
     [Header("スタッフの名前リスト(外部URLから取得)")]
     [SerializeField] private VRCUrl url;
 
-    private bool amIStaff = false;
+    private bool hasPermission = false;
 
     /*
     * Start
     * v (v async)
     * v OnStringLoadSuccess/OnStringLoadError
     * v v
-    * InitWithStaffList
-    *   - UpdateStaffFlag
+    * InitWithNameList
+    *   - UpdatePermissionFlag
     *   - Apply
     */
 
     void Start()
     {
         if (url.Get() == "") {
-            InitWithStaffList(staffList);
+            InitWithNameList(targetAccountNames);
         } else {
             VRCStringDownloader.LoadUrl(url, (IUdonEventReceiver)this);
         }
@@ -51,13 +51,13 @@ public class UdonPermission : UdonSharpBehaviour
 
     public override void OnStringLoadSuccess(IVRCStringDownload result)
     {
-        string[] loadedStaffList = ParseStaffListJson(result.Result);
-        bool succeeded = (loadedStaffList != null);
+        string[] loadedNameList = ParseNameListJson(result.Result);
+        bool succeeded = (loadedNameList != null);
         if (succeeded) {
-            InitWithStaffList(loadedStaffList);
+            InitWithNameList(loadedNameList);
         } else {
             DebugLog("Unity内のリストを使用します。");
-            InitWithStaffList(staffList);
+            InitWithNameList(targetAccountNames);
         }
     }
 
@@ -66,56 +66,56 @@ public class UdonPermission : UdonSharpBehaviour
         DebugLog("指定のURLへアクセスできませんでした。");
         DebugLog("Unity内のリストを使用します。");
         DebugLog(result.Error);
-        InitWithStaffList(staffList);
+        InitWithNameList(targetAccountNames);
     }
 
-    private void InitWithStaffList(string[] staffs)
+    private void InitWithNameList(string[] names)
     {
-        UpdateStaffFlag(staffs);
+        UpdatePermissionFlag(names);
         Apply();
     }
 
-    private void UpdateStaffFlag(string[] staffs)
+    private void UpdatePermissionFlag(string[] names)
     {
-        foreach (string staff in staffs)
+        foreach (string name in names)
         {
-            if (Networking.LocalPlayer.displayName == staff) amIStaff = true;
+            if (Networking.LocalPlayer.displayName == name) hasPermission = true;
         }
     }
 
     private void Apply()
     {
         // ON
-        foreach (Renderer renderer in staffOnlyOnRenderers)
+        foreach (Renderer renderer in restrictedRenderers)
         {
-            if (renderer != null) renderer.enabled = amIStaff;
+            if (renderer != null) renderer.enabled = hasPermission;
         }
-        foreach (Collider collider in staffOnlyOnColliders)
+        foreach (Collider collider in restrictedColliders)
         {
-            if (collider != null) collider.enabled = amIStaff;
+            if (collider != null) collider.enabled = hasPermission;
         }
-        foreach (GameObject obj in staffOnlyOnObjects)
+        foreach (GameObject obj in restrictedObjects)
         {
-            if (obj != null) obj.SetActive(amIStaff);
+            if (obj != null) obj.SetActive(hasPermission);
         }
         // OFF
-        foreach (Renderer renderer in staffOnlyOffRenderers)
+        foreach (Renderer renderer in invertedRestrictedRenderers)
         {
-            if (renderer != null) renderer.enabled = !amIStaff;
+            if (renderer != null) renderer.enabled = !hasPermission;
         }
-        foreach (Collider collider in staffOnlyOffColliders)
+        foreach (Collider collider in invertedRestrictedColliders)
         {
-            if (collider != null) collider.enabled = !amIStaff;
+            if (collider != null) collider.enabled = !hasPermission;
         }
-        foreach (GameObject obj in staffOnlyOffObjects)
+        foreach (GameObject obj in invertedRestrictedObjects)
         {
-            if (obj != null) obj.SetActive(!amIStaff);
+            if (obj != null) obj.SetActive(!hasPermission);
         }
     }
 
     // Utils
 
-    private static string[] ParseStaffListJson(string json)
+    private static string[] ParseNameListJson(string json)
     {
         bool succeeded = VRCJson.TryDeserializeFromJson(json, out DataToken token);
         if (!succeeded) {
@@ -128,29 +128,29 @@ public class UdonPermission : UdonSharpBehaviour
             return null;
         }
         DataList dataList = token.DataList;
-        string[] staffList = new string[dataList.Count];
+        string[] targetAccountNames = new string[dataList.Count];
         for (int i = 0; i < dataList.Count; i++)
         {
-            staffList[i] = dataList[i].String;
-            DebugLog(staffList[i]);
+            targetAccountNames[i] = dataList[i].String;
+            DebugLog(targetAccountNames[i]);
         }
         DebugLog("読み込みに成功しました (" + dataList.Count + "件)");
-        return staffList;
+        return targetAccountNames;
     }
 
     private static void DebugLog(string message)
     {
-        Debug.Log("[UdonEventStaff] " + message);
+        Debug.Log("[UdonPermission] " + message);
     }
 
-    public bool AmIStaff()
+    public bool HasPermission()
     {
-        return amIStaff;
+        return hasPermission;
     }
 
-    public void BecomeStaff()
+    public void GivePermission()
     {
-        amIStaff = true;
+        hasPermission = true;
         Apply();
     }
 }

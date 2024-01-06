@@ -8,17 +8,17 @@ public class RestrictedTeleporter : UdonSharpBehaviour
 {
     [SerializeField] UdonPermission udonPermission;
     [SerializeField] Transform teleportTarget;
-    [Header("非スタッフも使えるようにする（単なるテレポートスイッチにする）")]
-    [SerializeField] bool allowNonStaff = false;
+    [Header("権限によらず使えるようにする（単なるテレポートスイッチにする）")]
+    [SerializeField] bool allowEveryone = false;
 
     void Start()
     {
         if (udonPermission == null) {
-            Debug.Log("[StaffTeleport] UdonEventStaff がリンクされていません。");
+            Debug.Log("[RestrictedTeleporter] UdonPermission がリンクされていません。");
             return;
         }
         if (teleportTarget == null) {
-            Debug.Log("[StaffTeleport] TeleportTarget がセットされていません。");
+            Debug.Log("[RestrictedTeleporter] TeleportTarget がセットされていません。");
             return;
         }
     }
@@ -28,7 +28,7 @@ public class RestrictedTeleporter : UdonSharpBehaviour
         if (udonPermission == null) return;
         if (teleportTarget == null) return;
         //
-        if (allowNonStaff || udonPermission.AmIStaff()) {
+        if (allowEveryone || udonPermission.HasPermission()) {
             Networking.LocalPlayer.TeleportTo(
                 teleportTarget.position,
                 teleportTarget.rotation,

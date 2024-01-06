@@ -39,7 +39,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
     void Start()
     {
         if (udonPermission == null) {
-            Debug.Log("[StaffRegister_Manual] UdonEventStaff がリンクされていません。");
+            Debug.Log("[PermissionRequestUI] UdonPermission がリンクされていません。");
         }
     }
 
@@ -47,7 +47,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
     {
         if (udonPermission == null) return;
         if (requestingPlayerId != UNSET) return;
-        if (udonPermission.AmIStaff()) {
+        if (udonPermission.HasPermission()) {
             requestButton.interactable = false;
             return;
         }
@@ -60,7 +60,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
     public void OnRejectButtonClicked()
     {
         if (udonPermission == null) return;
-        if (!udonPermission.AmIStaff()) return;
+        if (!udonPermission.HasPermission()) return;
         //
         BecomeOwner();
         requestingPlayerId = UNSET;
@@ -70,7 +70,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
     public void OnAcceptButtonClicked()
     {
         if (udonPermission == null) return;
-        if (!udonPermission.AmIStaff()) return;
+        if (!udonPermission.HasPermission()) return;
         //
         BecomeOwner();
         acceptedPlayerId = requestingPlayerId;
@@ -95,14 +95,14 @@ public class PermissionRequestUI : UdonSharpBehaviour
     private void OnAcceptedPlayerIdChanged()
     {
         if (acceptedPlayerId == Networking.LocalPlayer.playerId) {
-            udonPermission.BecomeStaff();
+            udonPermission.GivePermission();
         }
     }
 
     private void UpdateUIAsIdleMode()
     {
         statusText.text = "";
-        requestButton.interactable = udonPermission != null && !udonPermission.AmIStaff();
+        requestButton.interactable = udonPermission != null && !udonPermission.HasPermission();
         acceptButton.interactable = false;
         rejectButton.interactable = false;
     }

@@ -15,14 +15,14 @@ public class PasswordUI : UdonSharpBehaviour
     void Start()
     {
         if (udonPermission == null) {
-            statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
+            statusText.text = "ワールドエラー: UdonPermission がリンクされていません。";
         }
     }
 
     public void OnInput()
     {
         if (udonPermission == null) return;
-        if (udonPermission.AmIStaff()) {
+        if (udonPermission.HasPermission()) {
             statusText.text = "すでにスタッフです。";
             inputField.gameObject.SetActive(false);
             return;
@@ -30,7 +30,7 @@ public class PasswordUI : UdonSharpBehaviour
         statusText.text = "";
         string userInput = inputField.text;
         if (userInput == password) {
-            udonPermission.BecomeStaff();
+            udonPermission.GivePermission();
             statusText.text = "スタッフになりました。";
             inputField.gameObject.SetActive(false);
         } else {

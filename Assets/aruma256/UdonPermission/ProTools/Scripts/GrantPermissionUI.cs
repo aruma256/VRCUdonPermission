@@ -14,20 +14,20 @@ public class GrantPermissionUI : UdonSharpBehaviour
     void Start()
     {
         if (udonPermission == null) {
-            statusText.text = "ワールドエラー: UdonEventStaff がリンクされていません。";
+            statusText.text = "ワールドエラー: UdonPermission がリンクされていません。";
         }
     }
 
     public void OnClick()
     {
         if (udonPermission == null) return;
-        if (udonPermission.AmIStaff()) {
+        if (udonPermission.HasPermission()) {
             statusText.text = "すでにスタッフです。";
             button.interactable = false;
             return;
         }
         statusText.text = "";
-        udonPermission.BecomeStaff();
+        udonPermission.GivePermission();
         statusText.text = "スタッフになりました。";
         button.interactable = false;
     }

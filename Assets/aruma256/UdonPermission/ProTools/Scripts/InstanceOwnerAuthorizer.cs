@@ -22,7 +22,7 @@ public class InstanceOwnerAuthorizer : UdonSharpBehaviour
     void Start()
     {
         if (udonPermission == null) {
-            Debug.Log("[StaffRegister_Manual] UdonEventStaff がリンクされていません。");
+            Debug.Log("[InstanceOwnerAuthorizer] UdonPermission がリンクされていません。");
         }
     }
 
@@ -41,7 +41,7 @@ public class InstanceOwnerAuthorizer : UdonSharpBehaviour
     {
         if (udonPermission == null) return;
         if (instanceOwnerName != Networking.LocalPlayer.displayName) return;
-        udonPermission.BecomeStaff();
+        udonPermission.GivePermission();
     }
 
     // Utility Functions

@@ -11,7 +11,7 @@ public class PermissionBasedSpawnChanger : UdonSharpBehaviour
     void Start()
     {
         if (udonPermission == null) {
-            Debug.Log("ワールドエラー: UdonEventStaff がリンクされていません。");
+            Debug.Log("ワールドエラー: UdonPermission がリンクされていません。");
         }
     }
 
@@ -29,7 +29,7 @@ public class PermissionBasedSpawnChanger : UdonSharpBehaviour
     {
         if (udonPermission == null) return;
         if (!player.isLocal) return;
-        if (!udonPermission.AmIStaff()) return;
+        if (!udonPermission.HasPermission()) return;
         player.TeleportTo(
             transform.position,
             transform.rotation,
