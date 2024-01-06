@@ -4,7 +4,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class StaffOnlyTeleport : UdonSharpBehaviour
+public class RestrictedTeleporter : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
     [SerializeField] Transform teleportTarget;

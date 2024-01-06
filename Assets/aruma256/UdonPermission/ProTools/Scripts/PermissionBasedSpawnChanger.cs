@@ -4,7 +4,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class StaffSpawnPoint : UdonSharpBehaviour
+public class PermissionBasedSpawnChanger : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
 

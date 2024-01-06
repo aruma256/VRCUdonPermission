@@ -5,7 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class StaffPassword : UdonSharpBehaviour
+public class PasswordUI : UdonSharpBehaviour
 {
     [SerializeField] UdonEventStaff udonEventStaff;
     [SerializeField] Text statusText;

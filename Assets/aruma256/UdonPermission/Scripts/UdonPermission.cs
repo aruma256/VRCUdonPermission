@@ -8,7 +8,7 @@ using VRC.Udon.Common.Interfaces;
 
 [DefaultExecutionOrder(-1000)]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class UdonEventStaff : UdonSharpBehaviour
+public class UdonPermission : UdonSharpBehaviour
 {
     [Header("スタッフのみ ON にするレンダラー（スタッフのみ見えるなど）")]
     [SerializeField] private Renderer[] staffOnlyOnRenderers;
