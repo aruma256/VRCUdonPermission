@@ -33,7 +33,6 @@ public class PasswordUI : UdonSharpBehaviour
         if (udonPermission == null) return;
         if (udonPermission.HasPermission()) {
             statusText.text = statusTextWhenAlreadyGranted;
-            inputField.gameObject.SetActive(false);
             return;
         }
         statusText.text = "";
@@ -41,7 +40,6 @@ public class PasswordUI : UdonSharpBehaviour
         if (userInput == password) {
             udonPermission.GivePermission();
             statusText.text = statusTextWhenGranted;
-            inputField.gameObject.SetActive(false);
         } else {
             statusText.text = statusTextWhenWrongPassword;
             inputField.gameObject.SetActive(false);
