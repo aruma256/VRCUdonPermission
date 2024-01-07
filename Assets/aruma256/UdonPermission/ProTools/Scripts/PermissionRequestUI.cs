@@ -7,7 +7,11 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class PermissionRequestUI : UdonSharpBehaviour
 {
+    [Header("UdonPermissionへのリンク")]
     [SerializeField] UdonPermission udonPermission;
+    [Header("文言 - 権限をリクエストしている場合")]
+    [SerializeField] string statusTextWhenRequesting = "以下のプレイヤーがスタッフ権限をリクエストしています";
+    [Header("内部的に利用するリンク")]
     [SerializeField] Text statusText;
     [SerializeField] Button requestButton;
     [SerializeField] Button rejectButton;
@@ -109,7 +113,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
 
     private void UpdateUIAsRequestingMode(VRCPlayerApi requestingPlayer)
     {
-        statusText.text = "以下のプレイヤーがスタッフ権限をリクエストしています\n" + requestingPlayer.displayName;
+        statusText.text = statusTextWhenRequesting + "\n" + requestingPlayer.displayName;
         requestButton.interactable = false;
         acceptButton.interactable = true;
         rejectButton.interactable = true;

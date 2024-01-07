@@ -6,7 +6,9 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class RestrictedTeleporter : UdonSharpBehaviour
 {
+    [Header("UdonPermissionへのリンク")]
     [SerializeField] UdonPermission udonPermission;
+    [Header("テレポート先")]
     [SerializeField] Transform teleportTarget;
     [Header("権限によらず使えるようにする（単なるテレポートスイッチにする）")]
     [SerializeField] bool allowEveryone = false;

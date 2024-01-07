@@ -6,6 +6,7 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class InstanceOwnerAuthorizer : UdonSharpBehaviour
 {
+    [Header("UdonPermissionへのリンク")]
     [SerializeField] UdonPermission udonPermission;
 
     [UdonSynced(UdonSyncMode.None), FieldChangeCallback(nameof(instanceOwnerName))] private string _instanceOwnerName = "";

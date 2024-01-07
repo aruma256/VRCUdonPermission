@@ -6,6 +6,7 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class PermissionBasedSpawnChanger : UdonSharpBehaviour
 {
+    [Header("UdonPermissionへのリンク")]
     [SerializeField] UdonPermission udonPermission;
 
     void Start()
