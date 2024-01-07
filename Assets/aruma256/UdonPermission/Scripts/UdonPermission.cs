@@ -23,14 +23,14 @@ public class UdonPermission : UdonSharpBehaviour
     [Header("権限を与える対象アカウントの名前リスト")]
     [SerializeField] private string[] targetAccountNames;
 
-    private bool hasPermission = false;
+    private bool[] _permissionContainer = new bool[1] { false };
 
     void Start()
     {
         foreach (string name in targetAccountNames)
         {
             if (Networking.LocalPlayer.displayName == name) {
-                hasPermission = true;
+                GivePermission();
                 break;
             }
         }
@@ -42,39 +42,49 @@ public class UdonPermission : UdonSharpBehaviour
         // ON
         foreach (Renderer renderer in restrictedRenderers)
         {
-            if (renderer != null) renderer.enabled = hasPermission;
+            if (renderer != null) renderer.enabled = _HasPermission();
         }
         foreach (Collider collider in restrictedColliders)
         {
-            if (collider != null) collider.enabled = hasPermission;
+            if (collider != null) collider.enabled = _HasPermission();
         }
         foreach (GameObject obj in restrictedObjects)
         {
-            if (obj != null) obj.SetActive(hasPermission);
+            if (obj != null) obj.SetActive(_HasPermission());
         }
         // OFF
         foreach (Renderer renderer in invertedRestrictedRenderers)
         {
-            if (renderer != null) renderer.enabled = !hasPermission;
+            if (renderer != null) renderer.enabled = !_HasPermission();
         }
         foreach (Collider collider in invertedRestrictedColliders)
         {
-            if (collider != null) collider.enabled = !hasPermission;
+            if (collider != null) collider.enabled = !_HasPermission();
         }
         foreach (GameObject obj in invertedRestrictedObjects)
         {
-            if (obj != null) obj.SetActive(!hasPermission);
+            if (obj != null) obj.SetActive(!_HasPermission());
         }
+    }
+
+    private bool _HasPermission()
+    {
+        return _permissionContainer[0];
     }
 
     public bool HasPermission()
     {
-        return hasPermission;
+        return _HasPermission();
     }
 
     public void GivePermission()
     {
-        hasPermission = true;
+        _permissionContainer[0] = true;
         Apply();
+    }
+
+    public bool[] GetPermissionContainer()
+    {
+        return _permissionContainer;
     }
 }
