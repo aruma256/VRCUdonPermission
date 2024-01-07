@@ -83,6 +83,12 @@ public class UdonPermission : UdonSharpBehaviour
         Apply();
     }
 
+    public void RevokePermission()
+    {
+        _permissionContainer[0] = false;
+        Apply();
+    }
+
     public bool[] GetPermissionContainer()
     {
         return _permissionContainer;

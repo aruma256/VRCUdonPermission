@@ -52,7 +52,6 @@ public class PermissionRequestUI : UdonSharpBehaviour
         if (udonPermission == null) return;
         if (requestingPlayerId != UNSET) return;
         if (udonPermission.HasPermission()) {
-            requestButton.interactable = false;
             return;
         }
         //
@@ -106,7 +105,7 @@ public class PermissionRequestUI : UdonSharpBehaviour
     private void UpdateUIAsIdleMode()
     {
         statusText.text = "";
-        requestButton.interactable = udonPermission != null && !udonPermission.HasPermission();
+        requestButton.interactable = true;
         acceptButton.interactable = false;
         rejectButton.interactable = false;
     }
