@@ -118,6 +118,16 @@ public class PermissionRequestUI : UdonSharpBehaviour
         rejectButton.interactable = true;
     }
 
+    public override void OnPlayerLeft(VRCPlayerApi leftPlayer)
+    {
+        if (leftPlayer.isLocal) return;
+        if (leftPlayer.playerId != requestingPlayerId) return;
+        // リクエスト中のプレイヤーが退出
+        BecomeOwner();
+        requestingPlayerId = UNSET;
+        RequestSerialization();
+    }
+
     // Utility Functions
 
     private bool IsOwner() => Networking.IsOwner(gameObject);
