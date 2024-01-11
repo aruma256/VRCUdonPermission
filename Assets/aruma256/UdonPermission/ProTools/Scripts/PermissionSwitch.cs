@@ -23,10 +23,9 @@ public class PermissionSwitch : UdonSharpBehaviour
     public override void Interact()
     {
         if (udonPermission == null) return;
-        bool hasPermission = udonPermission.HasPermission();
-        if (hasPermission && revokePermissionOnUse) {
+        if (revokePermissionOnUse && udonPermission.HasPermission()) {
             udonPermission.RevokePermission();
-        } else if (!hasPermission && givePermissionOnUse) {
+        } else if (givePermissionOnUse && !udonPermission.HasPermission()) {
             udonPermission.GivePermission();
         }
     }
