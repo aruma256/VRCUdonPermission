@@ -1,0 +1,7 @@
+/Assets/**
+!/Assets/aruma256/**/
+!/Assets/aruma256/**/*.cs
+/Library/
+/Packages/
+/ProjectSettings/
+/Temp/
