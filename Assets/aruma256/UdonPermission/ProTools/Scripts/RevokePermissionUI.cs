@@ -7,14 +7,14 @@ using VRC.Udon;
 namespace Aruma256.UdonPermission
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    public class GrantPermissionUI : UdonSharpBehaviour
+    public class RevokePermissionUI : UdonSharpBehaviour
     {
         [Header("UdonPermissionへのリンク")]
         [SerializeField] UdonPermission udonPermission;
-        [Header("文言 - 正しく権限を付与された場合")]
-        [SerializeField] string statusTextWhenGranted = "権限を付与されました。";
+        [Header("文言 - 正しく権限を剥奪された場合")]
+        [SerializeField] string statusTextWhenRevoked = "権限を削除しました。";
         [Header("文言 - すでに権限を持っている場合")]
-        [SerializeField] string statusTextWhenAlreadyGranted = "すでに権限を持っています。";
+        [SerializeField] string statusTextWhenAlreadyRevoked = "すでに権限がありません。";
         [Header("内部的に利用するリンク")]
         [SerializeField] Button button;
         [SerializeField] Text statusText;
@@ -29,13 +29,13 @@ namespace Aruma256.UdonPermission
         public void OnClick()
         {
             if (udonPermission == null) return;
-            if (udonPermission.HasPermission()) {
-                statusText.text = statusTextWhenAlreadyGranted;
+            if (!udonPermission.HasPermission()) {
+                statusText.text = statusTextWhenAlreadyRevoked;
                 return;
             }
             statusText.text = "";
-            udonPermission.GivePermission();
-            statusText.text = statusTextWhenGranted;
+            udonPermission.RevokePermission();
+            statusText.text = statusTextWhenRevoked;
         }
     }
 }

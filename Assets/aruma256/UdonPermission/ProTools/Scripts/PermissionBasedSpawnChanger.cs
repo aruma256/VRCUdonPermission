@@ -3,39 +3,42 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class PermissionBasedSpawnChanger : UdonSharpBehaviour
+namespace Aruma256.UdonPermission
 {
-    [Header("UdonPermissionへのリンク")]
-    [SerializeField] UdonPermission udonPermission;
-
-    void Start()
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    public class PermissionBasedSpawnChanger : UdonSharpBehaviour
     {
-        if (udonPermission == null) {
-            Debug.Log("ワールドエラー: UdonPermission がリンクされていません。");
+        [Header("UdonPermissionへのリンク")]
+        [SerializeField] UdonPermission udonPermission;
+
+        void Start()
+        {
+            if (udonPermission == null) {
+                Debug.Log("ワールドエラー: UdonPermission がリンクされていません。");
+            }
         }
-    }
 
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        OnPlayerSpawn(player);
-    }
+        public override void OnPlayerJoined(VRCPlayerApi player)
+        {
+            OnPlayerSpawn(player);
+        }
 
-    public override void OnPlayerRespawn(VRCPlayerApi player)
-    {
-        OnPlayerSpawn(player);
-    }
+        public override void OnPlayerRespawn(VRCPlayerApi player)
+        {
+            OnPlayerSpawn(player);
+        }
 
-    private void OnPlayerSpawn(VRCPlayerApi player)
-    {
-        if (udonPermission == null) return;
-        if (!player.isLocal) return;
-        if (!udonPermission.HasPermission()) return;
-        player.TeleportTo(
-            transform.position,
-            transform.rotation,
-            VRC_SceneDescriptor.SpawnOrientation.Default,
-            false
-        );
+        private void OnPlayerSpawn(VRCPlayerApi player)
+        {
+            if (udonPermission == null) return;
+            if (!player.isLocal) return;
+            if (!udonPermission.HasPermission()) return;
+            player.TeleportTo(
+                transform.position,
+                transform.rotation,
+                VRC_SceneDescriptor.SpawnOrientation.Default,
+                false
+            );
+        }
     }
 }

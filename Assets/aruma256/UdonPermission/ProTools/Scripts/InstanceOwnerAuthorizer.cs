@@ -3,54 +3,57 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-public class InstanceOwnerAuthorizer : UdonSharpBehaviour
+namespace Aruma256.UdonPermission
 {
-    [Header("UdonPermissionへのリンク")]
-    [SerializeField] UdonPermission udonPermission;
-
-    [UdonSynced(UdonSyncMode.None), FieldChangeCallback(nameof(instanceOwnerName))] private string _instanceOwnerName = "";
-    private string instanceOwnerName
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    public class InstanceOwnerAuthorizer : UdonSharpBehaviour
     {
-        get => _instanceOwnerName;
-        set
+        [Header("UdonPermissionへのリンク")]
+        [SerializeField] UdonPermission udonPermission;
+
+        [UdonSynced(UdonSyncMode.None), FieldChangeCallback(nameof(instanceOwnerName))] private string _instanceOwnerName = "";
+        private string instanceOwnerName
         {
-            _instanceOwnerName = value;
-            OnInstanceOwnerNameSet();
+            get => _instanceOwnerName;
+            set
+            {
+                _instanceOwnerName = value;
+                OnInstanceOwnerNameSet();
+            }
         }
-    }
 
-    void Start()
-    {
-        if (udonPermission == null) {
-            Debug.Log("[InstanceOwnerAuthorizer] UdonPermission がリンクされていません。");
+        void Start()
+        {
+            if (udonPermission == null) {
+                Debug.Log("[InstanceOwnerAuthorizer] UdonPermission がリンクされていません。");
+            }
         }
-    }
 
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        if (udonPermission == null) return;
-        if (!player.isLocal) return;
-        if (player.playerId != 1) return;
-        //
-        BecomeOwner();
-        instanceOwnerName = Networking.LocalPlayer.displayName;
-        RequestSerialization();
-    }
+        public override void OnPlayerJoined(VRCPlayerApi player)
+        {
+            if (udonPermission == null) return;
+            if (!player.isLocal) return;
+            if (player.playerId != 1) return;
+            //
+            BecomeOwner();
+            instanceOwnerName = Networking.LocalPlayer.displayName;
+            RequestSerialization();
+        }
 
-    private void OnInstanceOwnerNameSet()
-    {
-        if (udonPermission == null) return;
-        if (instanceOwnerName != Networking.LocalPlayer.displayName) return;
-        udonPermission.GivePermission();
-    }
+        private void OnInstanceOwnerNameSet()
+        {
+            if (udonPermission == null) return;
+            if (instanceOwnerName != Networking.LocalPlayer.displayName) return;
+            udonPermission.GivePermission();
+        }
 
-    // Utility Functions
+        // Utility Functions
 
-    private bool IsOwner() => Networking.IsOwner(gameObject);
-    private void BecomeOwner()
-    {
-        if (IsOwner()) return;
-        Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        private bool IsOwner() => Networking.IsOwner(gameObject);
+        private void BecomeOwner()
+        {
+            if (IsOwner()) return;
+            Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        }
     }
 }
