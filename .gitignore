@@ -1,7 +1,9 @@
-/Assets/**
-!/Assets/aruma256/**/
-!/Assets/aruma256/**/*.cs
-/Library/
-/Packages/
-/ProjectSettings/
-/Temp/
+*
+!Assets/
+!Assets/aruma256/
+!Assets/aruma256/UdonPermission/
+!Assets/aruma256/UdonPermission/Scripts/
+!Assets/aruma256/UdonPermission/ProTools/
+!Assets/aruma256/UdonPermission/ProTools/Scripts/
+!Assets/**/*.cs
+!.gitignore
