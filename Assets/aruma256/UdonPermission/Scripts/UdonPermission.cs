@@ -26,6 +26,8 @@ namespace Aruma256.UdonPermission
         [SerializeField] private string[] targetAccountNames;
 
         private bool[] _permissionContainer = new bool[1] { false };
+        private PermissionCallbackBase[] _callbacks = new PermissionCallbackBase[64];
+        private int _callbackCount = 0;
 
         void Start()
         {
@@ -83,17 +85,40 @@ namespace Aruma256.UdonPermission
         {
             _permissionContainer[0] = true;
             Apply();
+            NotifyCallbacks(true);
         }
 
         public void RevokePermission()
         {
             _permissionContainer[0] = false;
             Apply();
+            NotifyCallbacks(false);
         }
 
         public bool[] GetPermissionContainer()
         {
             return _permissionContainer;
+        }
+
+        public void RegisterCallback(PermissionCallbackBase callback)
+        {
+            if (_callbackCount >= _callbacks.Length) return;
+            _callbacks[_callbackCount] = callback;
+            _callbackCount++;
+        }
+
+        private void NotifyCallbacks(bool isGiven)
+        {
+            for (int i = 0; i < _callbackCount; i++)
+            {
+                if (_callbacks[i] != null)
+                {
+                    if (isGiven)
+                        _callbacks[i].OnPermissionGiven();
+                    else
+                        _callbacks[i].OnPermissionRevoked();
+                }
+            }
         }
     }
 }
