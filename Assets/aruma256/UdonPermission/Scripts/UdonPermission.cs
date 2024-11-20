@@ -31,14 +31,22 @@ namespace Aruma256.UdonPermission
 
         void Start()
         {
+            if (IsInAllowList()) {
+                GivePermission();
+            } else {
+                RevokePermission();
+            }
+        }
+
+        private bool IsInAllowList()
+        {
             foreach (string name in targetAccountNames)
             {
                 if (Networking.LocalPlayer.displayName == name) {
-                    GivePermission();
-                    break;
+                    return true;
                 }
             }
-            Apply();
+            return false;
         }
 
         private void Apply()
