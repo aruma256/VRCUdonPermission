@@ -59,39 +59,34 @@ namespace Aruma256.UdonPermission
             // ON
             foreach (Renderer renderer in restrictedRenderers)
             {
-                if (renderer != null) renderer.enabled = _HasPermission();
+                if (renderer != null) renderer.enabled = HasPermission();
             }
             foreach (Collider collider in restrictedColliders)
             {
-                if (collider != null) collider.enabled = _HasPermission();
+                if (collider != null) collider.enabled = HasPermission();
             }
             foreach (GameObject obj in restrictedObjects)
             {
-                if (obj != null) obj.SetActive(_HasPermission());
+                if (obj != null) obj.SetActive(HasPermission());
             }
             // OFF
             foreach (Renderer renderer in invertedRestrictedRenderers)
             {
-                if (renderer != null) renderer.enabled = !_HasPermission();
+                if (renderer != null) renderer.enabled = !HasPermission();
             }
             foreach (Collider collider in invertedRestrictedColliders)
             {
-                if (collider != null) collider.enabled = !_HasPermission();
+                if (collider != null) collider.enabled = !HasPermission();
             }
             foreach (GameObject obj in invertedRestrictedObjects)
             {
-                if (obj != null) obj.SetActive(!_HasPermission());
+                if (obj != null) obj.SetActive(!HasPermission());
             }
-        }
-
-        private bool _HasPermission()
-        {
-            return _permissionContainer[0];
         }
 
         public bool HasPermission()
         {
-            return _HasPermission();
+            return _permissionContainer[0];
         }
 
         private void UpdatePermission(bool value)
