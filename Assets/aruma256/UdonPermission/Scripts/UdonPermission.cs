@@ -37,10 +37,11 @@ namespace Aruma256.UdonPermission
         {
             _isInitialized = true;
             
-            if (_hasInitialPermissionValue ? _initialPermissionValue : IsInAllowList())
+            if (_hasInitialPermissionValue ? _initialPermissionValue : IsInAllowList()) {
                 GivePermission();
-            else
+            } else {
                 RevokePermission();
+            }
         }
 
         private bool IsInAllowList()
