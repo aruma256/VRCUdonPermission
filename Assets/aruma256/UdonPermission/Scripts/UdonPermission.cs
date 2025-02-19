@@ -30,13 +30,14 @@ namespace Aruma256.UdonPermission
         private int _callbackCount = 0;
         private bool _isInitialized = false;
         // Start前のGivePermission/RevokePermission呼び出しを保持（スイッチの初期状態などに使用）
-        private bool? _initialPermissionValue = null;
+        private bool _hasInitialPermissionValue = false;
+        private bool _initialPermissionValue = false;
 
         void Start()
         {
             _isInitialized = true;
             
-            if (_initialPermissionValue.HasValue ? _initialPermissionValue.Value : IsInAllowList())
+            if (_hasInitialPermissionValue ? _initialPermissionValue : IsInAllowList())
                 GivePermission();
             else
                 RevokePermission();
@@ -98,6 +99,7 @@ namespace Aruma256.UdonPermission
             if (!_isInitialized)
             {
                 _initialPermissionValue = true;
+                _hasInitialPermissionValue = true;
                 return;
             }
             _permissionContainer[0] = true;
@@ -110,6 +112,7 @@ namespace Aruma256.UdonPermission
             if (!_isInitialized)
             {
                 _initialPermissionValue = false;
+                _hasInitialPermissionValue = true;
                 return;
             }
             _permissionContainer[0] = false;
