@@ -94,30 +94,27 @@ namespace Aruma256.UdonPermission
             return _HasPermission();
         }
 
-        public void GivePermission()
+        private void UpdatePermission(bool value)
         {
             if (!_isInitialized)
             {
-                _initialPermissionValue = true;
+                _initialPermissionValue = value;
                 _hasInitialPermissionValue = true;
                 return;
             }
-            _permissionContainer[0] = true;
+            _permissionContainer[0] = value;
             Apply();
-            NotifyCallbacks(true);
+            NotifyCallbacks(value);
+        }
+
+        public void GivePermission()
+        {
+            UpdatePermission(true);
         }
 
         public void RevokePermission()
         {
-            if (!_isInitialized)
-            {
-                _initialPermissionValue = false;
-                _hasInitialPermissionValue = true;
-                return;
-            }
-            _permissionContainer[0] = false;
-            Apply();
-            NotifyCallbacks(false);
+            UpdatePermission(false);
         }
 
         public bool[] GetPermissionContainer()
