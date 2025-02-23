@@ -5,5 +5,7 @@
 !Assets/aruma256/UdonPermission/Scripts/
 !Assets/aruma256/UdonPermission/ProTools/
 !Assets/aruma256/UdonPermission/ProTools/Scripts/
+!Assets/aruma256/UdonPermission/ProTools/Integrations/
+!Assets/aruma256/UdonPermission/ProTools/Integrations/Scripts/
 !Assets/**/*.cs
 !.gitignore
