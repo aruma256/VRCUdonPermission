@@ -25,8 +25,10 @@ namespace Aruma256.UdonPermission
         */
         public override void OnPlayerRestored(VRCPlayerApi player)
         {
-            // Playerの数だけ複製され実行される。他人のデータは無視し、コールバック登録もしない
-            if (!IsOwnerOfThisObject()) return; 
+            // 「他者がロード完了したよ」は無視
+            if (!player.isLocal) return;
+            // 他者のデータは無視
+            if (!Networking.IsOwner(gameObject)) return;
 
             if (_hasPermission) {
                 udonPermission.GivePermission();
@@ -49,7 +51,5 @@ namespace Aruma256.UdonPermission
             _hasPermission = false;
             RequestSerialization();
         }
-
-        private bool IsOwnerOfThisObject() => Networking.IsOwner(gameObject);
     }
 }
