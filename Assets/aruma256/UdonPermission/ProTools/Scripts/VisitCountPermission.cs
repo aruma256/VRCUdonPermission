@@ -29,6 +29,9 @@ namespace Aruma256.UdonPermission
 
         public override void OnPlayerRestored(VRCPlayerApi player)
         {
+            // 「他者がロード完了したよ」は無視
+            if (!player.isLocal) return;
+            // 他者のデータは無視
             if (!Networking.IsOwner(gameObject)) return;
 
             string now = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
