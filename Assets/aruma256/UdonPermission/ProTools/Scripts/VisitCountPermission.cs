@@ -12,8 +12,11 @@ namespace Aruma256.UdonPermission
         [SerializeField] private UdonPermission udonPermission;
         [Header("◯回以上の訪問で権限を付与")]
         [SerializeField] private int requiredVisitCount = 3;
+        [Header("同日の再訪問をカウントしない")]
+        [SerializeField] private bool ignoreSameDayVisits = false;
 
         [UdonSynced(UdonSyncMode.None)] private int _visitCount = 0;
+        [UdonSynced(UdonSyncMode.None)] private string _lastVisitDateTime = "";
 
         void Start()
         {
@@ -28,13 +31,21 @@ namespace Aruma256.UdonPermission
         {
             if (!Networking.IsOwner(gameObject)) return;
 
-            _visitCount++;
-            RequestSerialization();
+            string now = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string today = now.Substring(0, 10); // "yyyy-MM-dd" part
+            bool shouldCount = !ignoreSameDayVisits || !_lastVisitDateTime.StartsWith(today);
 
-            if (_visitCount >= requiredVisitCount)
+            if (shouldCount)
             {
-                udonPermission.GivePermission();
+                _visitCount++;
+                if (_visitCount >= requiredVisitCount)
+                {
+                    udonPermission.GivePermission();
+                }
             }
+
+            _lastVisitDateTime = now;
+            RequestSerialization();
         }
 
         public int GetVisitCount()
