@@ -14,7 +14,7 @@ namespace Aruma256.UdonPermission
         [Header("◯回以上の訪問で権限を付与")]
         [SerializeField] private int requiredVisitCount = 3;
         [Header("同日の再訪問をカウントしない")]
-        [SerializeField] private bool ignoreSameDayVisits = false;
+        [SerializeField] private bool ignoreSameDayVisits = true;
         [Header("訪問回数表示用のText（オプション）")]
         [SerializeField] private TextMeshProUGUI visitCountText;
 
