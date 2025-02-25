@@ -2,6 +2,7 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using TMPro;
 
 namespace Aruma256.UdonPermission
 {
@@ -14,6 +15,8 @@ namespace Aruma256.UdonPermission
         [SerializeField] private int requiredVisitCount = 3;
         [Header("同日の再訪問をカウントしない")]
         [SerializeField] private bool ignoreSameDayVisits = false;
+        [Header("訪問回数表示用のText（オプション）")]
+        [SerializeField] private TextMeshProUGUI visitCountText;
 
         [UdonSynced(UdonSyncMode.None)] private int _visitCount = 0;
         [UdonSynced(UdonSyncMode.None)] private string _lastVisitDateTime = "";
@@ -49,6 +52,14 @@ namespace Aruma256.UdonPermission
 
             _lastVisitDateTime = now;
             RequestSerialization();
+
+            UpdateVisitCountDisplay();
+        }
+
+        private void UpdateVisitCountDisplay()
+        {
+            if (visitCountText == null) return;
+            visitCountText.text = _visitCount.ToString();
         }
 
         public int GetVisitCount()
