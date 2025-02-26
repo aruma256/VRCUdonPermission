@@ -3,10 +3,11 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 using TMPro;
+using VRC.SDK3.Persistence;
 
 namespace Aruma256.UdonPermission
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class VisitCountPermission : UdonSharpBehaviour
     {
         [Header("UdonPermissionへのリンク")]
@@ -14,12 +15,15 @@ namespace Aruma256.UdonPermission
         [Header("◯回以上の訪問で権限を付与")]
         [SerializeField] private int requiredVisitCount = 3;
         [Header("同日の再訪問をカウントしない")]
-        [SerializeField] private bool ignoreSameDayVisits = true;
+        [SerializeField] private bool ignoreSameDayVisits = false;
         [Header("訪問回数表示用のText（オプション）")]
         [SerializeField] private TextMeshProUGUI visitCountText;
-
-        [UdonSynced(UdonSyncMode.None)] private int _visitCount = 0;
-        [UdonSynced(UdonSyncMode.None)] private string _lastVisitDateTime = "";
+        [Header("PlayerDataのキー設定（任意）")]
+        [SerializeField] private string visitCountKey = "UdonPermission_VisitCount";
+        [SerializeField] private string lastVisitDateKey = "UdonPermission_LastVisitDate";
+        
+        private int _visitCount = 0;
+        private string _lastVisitDateTime = "";
 
         void Start()
         {
@@ -34,8 +38,10 @@ namespace Aruma256.UdonPermission
         {
             // 「他者がロード完了したよ」は無視
             if (!player.isLocal) return;
-            // 他者のデータは無視
-            if (!Networking.IsOwner(gameObject)) return;
+
+            // PlayerDataから訪問回数と最終訪問日時を取得
+            _visitCount = PlayerData.GetInt(player, visitCountKey);
+            _lastVisitDateTime = PlayerData.GetString(player, lastVisitDateKey) ?? "";
 
             string now = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string today = now.Substring(0, 10); // "yyyy-MM-dd" part
@@ -44,15 +50,18 @@ namespace Aruma256.UdonPermission
             if (shouldCount)
             {
                 _visitCount++;
+                // PlayerDataに訪問回数を保存
+                PlayerData.SetInt(visitCountKey, _visitCount);
+
                 if (_visitCount >= requiredVisitCount)
                 {
                     udonPermission.GivePermission();
                 }
             }
 
-            _lastVisitDateTime = now;
-            RequestSerialization();
-
+            // PlayerDataに最終訪問日時を保存
+            PlayerData.SetString(lastVisitDateKey, now);
+            
             UpdateVisitCountDisplay();
         }
 
