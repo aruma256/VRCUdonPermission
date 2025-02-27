@@ -71,10 +71,5 @@ namespace Aruma256.UdonPermission
             if (visitCountText == null) return;
             visitCountText.text = _visitCount.ToString();
         }
-
-        public ulong GetVisitCount()
-        {
-            return _visitCount;
-        }
     }
 }
