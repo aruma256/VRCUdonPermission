@@ -13,7 +13,7 @@ namespace Aruma256.UdonPermission
         [Header("UdonPermissionへのリンク")]
         [SerializeField] private UdonPermission udonPermission;
         [Header("◯回以上の訪問で権限を付与")]
-        [SerializeField] private int requiredVisitCount = 3;
+        [SerializeField] private ulong requiredVisitCount = 3;
         [Header("同日の再訪問をカウントしない")]
         [SerializeField] private bool ignoreSameDayVisits = false;
         [Header("訪問回数表示用のText（オプション）")]
@@ -22,7 +22,7 @@ namespace Aruma256.UdonPermission
         [SerializeField] private string visitCountKey = "UdonPermission_VisitCount";
         [SerializeField] private string lastVisitDateKey = "UdonPermission_LastVisitDate";
         
-        private int _visitCount = 0;
+        private ulong _visitCount = 0;
         private string _lastVisitDateTime = "";
 
         void Start()
@@ -40,7 +40,7 @@ namespace Aruma256.UdonPermission
             if (!player.isLocal) return;
 
             // PlayerDataから訪問回数と最終訪問日時を取得
-            _visitCount = PlayerData.GetInt(player, visitCountKey);
+            _visitCount = PlayerData.GetULong(player, visitCountKey);
             _lastVisitDateTime = PlayerData.GetString(player, lastVisitDateKey) ?? "0000-00-00 00:00:00";
 
             string now = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -51,7 +51,7 @@ namespace Aruma256.UdonPermission
             {
                 _visitCount++;
                 // PlayerDataに訪問回数を保存
-                PlayerData.SetInt(visitCountKey, _visitCount);
+                PlayerData.SetULong(visitCountKey, _visitCount);
             }
 
             // 訪問回数が条件を満たしているかチェック
@@ -72,7 +72,7 @@ namespace Aruma256.UdonPermission
             visitCountText.text = _visitCount.ToString();
         }
 
-        public int GetVisitCount()
+        public ulong GetVisitCount()
         {
             return _visitCount;
         }
