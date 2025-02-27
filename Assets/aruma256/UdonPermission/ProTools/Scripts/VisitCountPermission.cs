@@ -52,11 +52,12 @@ namespace Aruma256.UdonPermission
                 _visitCount++;
                 // PlayerDataに訪問回数を保存
                 PlayerData.SetInt(visitCountKey, _visitCount);
+            }
 
-                if (_visitCount >= requiredVisitCount)
-                {
-                    udonPermission.GivePermission();
-                }
+            // 訪問回数が条件を満たしているかチェック
+            if (_visitCount >= requiredVisitCount)
+            {
+                udonPermission.GivePermission();
             }
 
             // PlayerDataに最終訪問日時を保存
