@@ -41,11 +41,11 @@ namespace Aruma256.UdonPermission
 
             // PlayerDataから訪問回数と最終訪問日時を取得
             _visitCount = PlayerData.GetInt(player, visitCountKey);
-            _lastVisitDateTime = PlayerData.GetString(player, lastVisitDateKey) ?? "";
+            _lastVisitDateTime = PlayerData.GetString(player, lastVisitDateKey) ?? "0000-00-00 00:00:00";
 
             string now = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string today = now.Substring(0, 10); // "yyyy-MM-dd" part
-            bool shouldCount = !ignoreSameDayVisits || !_lastVisitDateTime.StartsWith(today);
+            bool shouldCount = !ignoreSameDayVisits || _lastVisitDateTime.CompareTo(today) < 0;
 
             if (shouldCount)
             {
