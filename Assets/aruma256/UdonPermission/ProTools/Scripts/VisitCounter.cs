@@ -10,10 +10,8 @@ namespace Aruma256.UdonPermission
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class VisitCounter : UdonSharpBehaviour
     {
-        [Header("UdonPermissionへのリンク")]
-        [SerializeField] private UdonPermission udonPermission;
-        [Header("◯回以上の訪問で権限を付与")]
-        [SerializeField] private ulong requiredVisitCount = 3;
+        [Header("通知先のVisitCountPermission")]
+        [SerializeField] private VisitCountPermission[] visitCountPermissions;
         [Header("同日の再訪問をカウントしない")]
         [SerializeField] private bool ignoreSameDayVisits = false;
         [Header("訪問回数表示用のText（オプション）")]
@@ -24,15 +22,6 @@ namespace Aruma256.UdonPermission
         
         private ulong _visitCount = 0;
         private string _lastVisitDateTime = "";
-
-        void Start()
-        {
-            if (udonPermission == null)
-            {
-                Debug.Log("[VisitCountPermission] UdonPermission がリンクされていません。");
-                return;
-            }
-        }
 
         public override void OnPlayerRestored(VRCPlayerApi player)
         {
@@ -54,22 +43,33 @@ namespace Aruma256.UdonPermission
                 PlayerData.SetULong(visitCountKey, _visitCount);
             }
 
-            // 訪問回数が条件を満たしているかチェック
-            if (_visitCount >= requiredVisitCount)
-            {
-                udonPermission.GivePermission();
-            }
-
             // PlayerDataに最終訪問日時を保存
             PlayerData.SetString(lastVisitDateKey, now);
             
+            // 訪問回数を表示
             UpdateVisitCountDisplay();
+            
+            // 各VisitCountPermissionに訪問回数を通知
+            NotifyVisitCountPermissions();
         }
 
         private void UpdateVisitCountDisplay()
         {
             if (visitCountText == null) return;
             visitCountText.text = _visitCount.ToString();
+        }
+        
+        private void NotifyVisitCountPermissions()
+        {
+            if (visitCountPermissions == null) return;
+            
+            foreach (VisitCountPermission permission in visitCountPermissions)
+            {
+                if (permission != null)
+                {
+                    permission.ReceiveVisitCount(_visitCount);
+                }
+            }
         }
     }
 }
